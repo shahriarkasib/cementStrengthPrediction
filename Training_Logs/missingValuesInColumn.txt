@@ -1,0 +1,47 @@
+2020-02-19/16:17:28		Missing Values Validation Started!!
+2020-02-19/16:18:13		Missing Values Validation Started!!
+2020-02-19/16:22:30		Missing Values Validation Started!!
+2020-02-19/16:26:11		Missing Values Validation Started!!
+2020-02-19/16:56:41		Missing Values Validation Started!!
+2021-06-21/01:33:54		Missing Values Validation Started!!
+2021-06-21/01:34:17		Missing Values Validation Started!!
+2021-06-22/17:08:41		Missing Values Validation Started!!
+2021-06-22/18:52:31		Missing Values Validation Started!!
+2021-06-22/18:52:31		Error Occured while moving the file :: <class 'OSError'>
+2021-06-22/18:54:47		Missing Values Validation Started!!
+2021-06-22/18:54:48		Error Occured while moving the file :: <class 'OSError'>
+2021-06-22/18:55:22		Missing Values Validation Started!!
+2021-06-22/18:55:22		Error Occured while moving the file :: <class 'OSError'>
+2021-06-22/19:00:37		Missing Values Validation Started!!
+2021-06-22/19:00:37		Error Occured while moving the file :: <class 'OSError'>
+2021-06-22/19:10:52		Missing Values Validation Started!!
+2021-06-22/19:23:51		Missing Values Validation Started!!
+2021-06-22/19:34:19		Missing Values Validation Started!!
+2021-06-22/19:35:37		Missing Values Validation Started!!
+2021-06-23/13:37:08		Missing Values Validation Started!!
+2021-06-23/13:37:40		Missing Values Validation Started!!
+2021-06-23/14:46:30		Missing Values Validation Started!!
+2021-06-23/14:49:50		Missing Values Validation Started!!
+2021-06-23/15:05:09		Missing Values Validation Started!!
+2021-06-23/15:05:41		Missing Values Validation Started!!
+2021-06-23/15:19:17		Missing Values Validation Started!!
+2021-06-23/15:20:36		Missing Values Validation Started!!
+2021-06-23/17:31:35		Missing Values Validation Started!!
+2021-06-23/17:31:39		Missing Values Validation Started!!
+2021-06-23/17:32:40		Missing Values Validation Started!!
+2021-06-23/17:38:04		Missing Values Validation Started!!
+2021-08-07/15:18:50		Missing Values Validation Started!!
+2021-08-07/15:22:42		Missing Values Validation Started!!
+2021-08-07/15:23:29		Missing Values Validation Started!!
+2021-08-07/15:25:21		Missing Values Validation Started!!
+2021-08-07/15:29:48		Missing Values Validation Started!!
+2021-08-07/15:30:55		Missing Values Validation Started!!
+2021-08-07/15:32:12		Missing Values Validation Started!!
+2021-08-07/16:20:51		Missing Values Validation Started!!
+2021-08-07/16:30:38		Missing Values Validation Started!!
+2021-08-10/12:52:54		Missing Values Validation Started!!
+2021-08-10/12:55:25		Missing Values Validation Started!!
+2021-08-10/12:59:38		Missing Values Validation Started!!
+2021-08-10/13:18:47		Missing Values Validation Started!!
+2021-08-19/16:29:21		Missing Values Validation Started!!
+2021-08-19/17:10:06		Missing Values Validation Started!!
