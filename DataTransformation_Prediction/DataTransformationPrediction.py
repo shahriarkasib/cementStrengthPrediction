@@ -1,6 +1,6 @@
 from datetime import datetime
 from os import listdir
-import pandas
+import pandas as pd
 from application_logging.logger import App_Logger
 
 
@@ -40,6 +40,7 @@ class dataTransformPredict:
 
           try:
                log_file = open("Prediction_Logs/dataTransformLog.txt", 'a+')
+               bucket = self.resource.Bucket('cementstrenghtprediction')
                files = [obj.key for obj in bucket.objects.filter(Prefix='goodrawdata/') if obj.size]
 
                for file in files:
