@@ -27,7 +27,9 @@ def predictRouteClient():
             db_obj = log_insertion_to_db('PredictionGeneralLog')
             data_db = {'objective': 'PredictionSystem', 'message': "Prediction Started",
                        'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            print("inserting")
             db_obj.insert_data(data_db)
+            print("inserted")
 
             pred_val = pred_validation(aws_obj.client, aws_obj.resource, 'cementstrengthproject') #object initialization
 
@@ -87,6 +89,7 @@ def trainRouteClient():
         db_obj = log_insertion_to_db('TrainingGeneralLog')
         data_db = {'objective': 'TrainSystem', 'message': "Training Started",
                    'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+        print("inserting")
         db_obj.insert_data(data_db)
         aws_obj.delete_modelfiles('cementstrengthproject')
         train_valObj = train_validation(aws_obj.client, aws_obj.resource, 'cementstrengthproject') #object initialization
@@ -123,4 +126,4 @@ def trainRouteClient():
 
 if __name__ == "__main__":
     aws_obj = aws()
-    app.run(host='0.0.0.0',port=8000)
+    app.run(host='127.0.0.1',port=8000)

@@ -309,3 +309,15 @@
 2021-08-25/00:17:39		Start of Validation on files for prediction!!
 2021-08-25/00:17:46		Raw Data Validation Complete!!
 2021-08-25/00:17:46		Creating Prediction_Database and tables on the basis of given schema!!!
+2021-08-25/21:27:42		Start of Validation on files for prediction!!
+2021-08-25/21:27:46		Raw Data Validation Complete!!
+2021-08-25/21:27:46		Creating Prediction_Database and tables on the basis of given schema!!!
+2021-08-25/21:37:29		Start of Validation on files for prediction!!
+2021-08-25/21:37:34		Raw Data Validation Complete!!
+2021-08-25/21:37:34		Creating Prediction_Database and tables on the basis of given schema!!!
+2021-08-25/21:42:00		Start of Validation on files for prediction!!
+2021-08-25/21:42:06		Raw Data Validation Complete!!
+2021-08-25/21:42:06		Creating Prediction_Database and tables on the basis of given schema!!!
+2021-08-26/15:07:16		Start of Validation on files for prediction!!
+2021-08-26/15:07:28		Raw Data Validation Complete!!
+2021-08-26/15:07:28		Creating Prediction_Database and tables on the basis of given schema!!!
