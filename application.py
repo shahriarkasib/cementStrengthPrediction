@@ -126,4 +126,4 @@ def trainRouteClient():
 
 if __name__ == "__main__":
     aws_obj = aws()
-    application.run(host='127.0.0.1',port=8000)
+    application.run(host='0.0.0.0',port=8000)
