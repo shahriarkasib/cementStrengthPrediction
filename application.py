@@ -18,6 +18,7 @@ def home():
 
 @application.route("/predict", methods=['POST'])
 def predictRouteClient():
+    aws_obj = aws()
     try:
         if request.json is not None:
             path = request.json['filepath']
@@ -46,7 +47,7 @@ def predictRouteClient():
             data_db = {'objective': 'PredictionSystem', 'message': "Prediction Started",
                        'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
             db_obj.insert_data(data_db)
-            pred_val = pred_validation(aws_obj.client, aws_obj.resource,                                       'cementstrengthproject')  # object initialization
+            pred_val = pred_validation(aws_obj.client, aws_obj.resource,'cementstrengthproject')  # object initialization
             pred_val.prediction_validation()  # calling the prediction_validation function
             pred = prediction(path, aws_obj.client, aws_obj.resource, 'cementstrengthproject')  # object initialization
             # predicting for dataset present in database
@@ -81,6 +82,7 @@ def predictRouteClient():
 
 @application.route("/train", methods=['GET'])
 def trainRouteClient():
+    aws_obj = aws()
 
     try:
         db_obj = log_insertion_to_db('TrainingGeneralLog')
@@ -122,5 +124,4 @@ def trainRouteClient():
     return Response("Training successfull!!")
 
 if __name__ == "__main__":
-    aws_obj = aws()
     application.run()
