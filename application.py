@@ -10,14 +10,14 @@ from log_insertion_to_db.log_insertion_to_db import log_insertion_to_db
 from datetime import datetime as dt
 
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-@app.route("/", methods=['GET'])
+@application.route("/", methods=['GET'])
 @cross_origin()
 def home():
     return render_template('index.html')
 
-@app.route("/predict", methods=['POST'])
+@application.route("/predict", methods=['POST'])
 @cross_origin()
 def predictRouteClient():
     try:
@@ -81,7 +81,7 @@ def predictRouteClient():
 
 
 
-@app.route("/train", methods=['GET'])
+@application.route("/train", methods=['GET'])
 @cross_origin()
 def trainRouteClient():
 
@@ -126,4 +126,4 @@ def trainRouteClient():
 
 if __name__ == "__main__":
     aws_obj = aws()
-    app.run(host='127.0.0.1',port=8000)
+    application.run(host='127.0.0.1',port=8000)

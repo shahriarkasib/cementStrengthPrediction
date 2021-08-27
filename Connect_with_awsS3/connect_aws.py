@@ -1,5 +1,4 @@
 import boto3
-import boto
 class aws:
 
     def __init__(self):
