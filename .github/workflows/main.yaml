@@ -9,9 +9,9 @@
 name: CI-CD-Pipeline-of-docker-image-to-AWS-ElasticBeanstalk
 
 env:
-    EB_PACKAGE_S3_BUCKET_NAME: "cementstrengthdocker"
-    EB_APPLICATION_NAME: "CementStrengthPrediction"
-    EB_ENVIRONMENT_NAME: "Cementstrengthprediction-env-1"
+    EB_PACKAGE_S3_BUCKET_NAME: "cementstrengthdocker2"
+    EB_APPLICATION_NAME: "CementStrengthPredictionDocker"
+    EB_ENVIRONMENT_NAME: "Cementstrengthpredictiondocker-env"
     DEPLOY_PACKAGE_NAME: "flask-docker-app-${{ github.sha }}.zip"
     AWS_REGION_NAME: "us-east-1"
 
