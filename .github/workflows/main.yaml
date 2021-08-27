@@ -10,8 +10,8 @@ name: CI-CD-Pipeline-of-docker-image-to-AWS-ElasticBeanstalk
 
 env:
     EB_PACKAGE_S3_BUCKET_NAME: "cementstrengthdocker"
-    EB_APPLICATION_NAME: "cementStrengthPrediction"
-    EB_ENVIRONMENT_NAME: "Cementstrengthprediction-env"
+    EB_APPLICATION_NAME: "CementStrengthPrediction"
+    EB_ENVIRONMENT_NAME: "Cementstrengthprediction-env-1"
     DEPLOY_PACKAGE_NAME: "flask-docker-app-${{ github.sha }}.zip"
     AWS_REGION_NAME: "us-east-1"
 
@@ -40,10 +40,6 @@ jobs:
              flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
              # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
              flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-         - name: Print nice message on completion of CI Pipeline
-           run : echo "CI Pipeline part finished successfully"
-
          - name: Create ZIP deployment package
            run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./  -x  *.git*
 
@@ -84,4 +80,3 @@ jobs:
 
          - name: Print nice message on completion of CD Pipeline
            run : echo "CD Pipeline part finished successfully"
-

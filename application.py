@@ -13,12 +13,10 @@ from datetime import datetime as dt
 application = Flask(__name__)
 
 @application.route("/", methods=['GET'])
-@cross_origin()
 def home():
     return render_template('index.html')
 
 @application.route("/predict", methods=['POST'])
-@cross_origin()
 def predictRouteClient():
     try:
         if request.json is not None:
@@ -82,7 +80,6 @@ def predictRouteClient():
 
 
 @application.route("/train", methods=['GET'])
-@cross_origin()
 def trainRouteClient():
 
     try:
@@ -126,4 +123,4 @@ def trainRouteClient():
 
 if __name__ == "__main__":
     aws_obj = aws()
-    application.run(host='0.0.0.0',port=8000)
+    application.run()
