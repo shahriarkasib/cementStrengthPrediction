@@ -14,7 +14,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  #PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: cementstrengthprediction    # TODO: update to cluster name
   GKE_ZONE: us-central1-c   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
