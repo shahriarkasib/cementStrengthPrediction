@@ -13,6 +13,12 @@ on:
     branches:
       - main
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: cementstrengthprediction    # TODO: update to cluster name
+  GKE_ZONE: us-central1-c   # TODO: update to cluster zone
+  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
+  IMAGE: static-site
 
 jobs:
     build:
@@ -21,7 +27,6 @@ jobs:
        steps:
          - name: Git clone our repository
            uses: actions/checkout@v1
-
          - name: Install dependencies
            run: |
              python -m pip install --upgrade pip
@@ -33,4 +38,22 @@ jobs:
              flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
              # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
              flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+         - name: Checkout
+           uses: actions/checkout@v2
+
+             # Setup gcloud CLI
+         - uses: google-github-actions/setup-gcloud@master
+           with:
+             version: '290.0.1'
+             service_account_key: ${{ secrets.GKE_SA_KEY }}
+             project_id: ${{ secrets.GKE_PROJECT }}
+
+         # Configure Docker to use the gcloud command-line tool as a credential
+         # helper for authentication
+         - run: |-
+             gcloud --quiet auth configure-docker
+         # Get the GKE credentials so we can deploy to the cluster
+         - run: |-
+             gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
