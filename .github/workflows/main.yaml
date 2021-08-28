@@ -34,3 +34,21 @@ jobs:
              # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
              flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+         - name: Checkout
+           uses: actions/checkout@v2
+
+             # Setup gcloud CLI
+         - uses: google-github-actions/setup-gcloud@master
+           with:
+             version: '290.0.1'
+             service_account_key: ${{ secrets.GKE_SA_KEY }}
+             project_id: ${{ secrets.GKE_PROJECT }}
+
+         # Configure Docker to use the gcloud command-line tool as a credential
+         # helper for authentication
+         - run: |-
+             gcloud --quiet auth configure-docker
+         # Get the GKE credentials so we can deploy to the cluster
+         - run: |-
+             gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+
