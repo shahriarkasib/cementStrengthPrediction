@@ -1,5 +1,14 @@
 import boto3
+
+
 class aws:
+    """
+                   This class shall  be used to perform any cloud action.
+                   Written By: Shahriar Sourav
+                   Version: 1.0
+                   Revisions: None
+
+                   """
 
     def __init__(self):
 
@@ -14,7 +23,7 @@ class aws:
                                     region_name= self.region_name
                                 )
 
-            self.resource =  boto3.resource(
+            self.resource = boto3.resource(
                     's3',
                     aws_access_key_id=self.aws_access_key_id,
                     aws_secret_access_key=self.aws_secret_access_key,
@@ -24,7 +33,21 @@ class aws:
             print(e)
 
     def delete_modelfiles(self, bucket_name):
-        print("deleting modelfilea")
-        bucket = self.resource.Bucket(bucket_name)
-        bucket.objects.filter(Prefix="modelfiles/").delete()
-        print("model files deleted")
+
+        """
+                                                Method Name: delete_modelfiles
+                                                Description: Deleting model files from cloud for retraining
+                                                On Failure: Raise Exception
+
+                                                Written By: Shahriar Sourav
+                                                Version: 1.0
+                                                Revisions: None
+
+                                        """
+        try:
+            print("deleting modelfiles")
+            bucket = self.resource.Bucket(bucket_name)
+            bucket.objects.filter(Prefix="modelfiles/").delete()
+            print("model files deleted")
+        except Exception as e:
+            raise e

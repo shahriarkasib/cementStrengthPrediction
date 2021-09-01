@@ -12,7 +12,7 @@ class Prediction_Data_validation:
     """
                This class shall be used for handling all the validation done on the Raw Prediction Data!!.
 
-               Written By: iNeuron Intelligence
+               Written By: Shahriar Sourav
                Version: 1.0
                Revisions: None
 
@@ -51,21 +51,29 @@ class Prediction_Data_validation:
             column_names = dic['ColName']
             NumberofColumns = dic['NumberofColumns']
 
-            message ="LengthOfDateStampInFile:: %s" %LengthOfDateStampInFile + "\t" + "LengthOfTimeStampInFile:: %s" % LengthOfTimeStampInFile +"\t " + "NumberofColumns:: %s" % NumberofColumns + "\n"
-
-
-
+            message = "LengthOfDateStampInFile:: %s" % LengthOfDateStampInFile + "\t" + "LengthOfTimeStampInFile:: %s" % LengthOfTimeStampInFile + "\t " + "NumberofColumns:: %s" % NumberofColumns + "\n"
+            data_db = {'objective': 'schema_validation', 'status': 'ok', 'error_type': '',
+                       'file_name': '', 'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
 
         except ValueError:
-
+            data_db = {'objective': 'schema_validation', 'status': 'error', 'error_type':
+                'ValueError', 'file_name': '', 'message': 'Value Error has occured',
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise ValueError
 
         except KeyError:
-
+            data_db = {'objective': 'schema_validation', 'status': 'error', 'error_type': 'KeyError', 'file_name': '',
+                       'message': 'key error has occured', 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise KeyError
 
         except Exception as e:
-
+            data_db = {'objective': 'schema_validation', 'status': 'error', 'error_type': 'ExceptionError',
+                       'file_name': '',
+                       'message': '', 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise e
 
         return LengthOfDateStampInFile, LengthOfTimeStampInFile, column_names, NumberofColumns
@@ -80,7 +88,7 @@ class Prediction_Data_validation:
                                       Output: Regex pattern
                                       On Failure: None
 
-                                       Written By: iNeuron Intelligence
+                                       Written By: Shahriar Sourav
                                       Version: 1.0
                                       Revisions: None
 
@@ -98,7 +106,7 @@ class Prediction_Data_validation:
                                         Output: None
                                         On Failure: OSError
 
-                                         Written By: iNeuron Intelligence
+                                         Written By: Shahriar Sourav
                                         Version: 1.0
                                         Revisions: None
 
@@ -109,113 +117,18 @@ class Prediction_Data_validation:
 
             aws_object = self.resource.Object('cementstrengthproject', 'badrawdataprediction/')
             aws_object.put()
+            message = "Directory for GoodBadrawData created Succesfully"
+            data_db = {'objective': 'createDirectoryForGoodBadRawData', 'status': 'ok', 'error_type': '',
+                       'file_name': '', 'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
 
         except OSError as ex:
-
+            message = str(ex)
+            data_db = {'objective': 'createDirectoryForGoodBadRawData', 'status': 'error', 'error_type': 'OSError',
+                       'file_name': '',
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise OSError
-
-    # def deleteExistingGoodDataTrainingFolder(self):
-    #     """
-    #                                         Method Name: deleteExistingGoodDataTrainingFolder
-    #                                         Description: This method deletes the directory made to store the Good Data
-    #                                                       after loading the data in the table. Once the good files are
-    #                                                       loaded in the DB,deleting the directory ensures space optimization.
-    #                                         Output: None
-    #                                         On Failure: OSError
-    #
-    #                                          Written By: iNeuron Intelligence
-    #                                         Version: 1.0
-    #                                         Revisions: None
-    #
-    #                                                 """
-    #     try:
-    #         path = 'Prediction_Raw_Files_Validated/'
-    #         # if os.path.isdir("ids/" + userName):
-    #         # if os.path.isdir(path + 'Bad_Raw/'):
-    #         #     shutil.rmtree(path + 'Bad_Raw/')
-    #         if os.path.isdir(path + 'Good_Raw/'):
-    #             shutil.rmtree(path + 'Good_Raw/')
-    #             file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #             self.logger.log(file,"GoodRaw directory deleted successfully!!!")
-    #             file.close()
-    #     except OSError as s:
-    #         file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #         self.logger.log(file,"Error while Deleting Directory : %s" %s)
-    #         file.close()
-    #         raise OSError
-    # def deleteExistingBadDataTrainingFolder(self):
-    #
-    #     """
-    #                                         Method Name: deleteExistingBadDataTrainingFolder
-    #                                         Description: This method deletes the directory made to store the bad Data.
-    #                                         Output: None
-    #                                         On Failure: OSError
-    #
-    #                                          Written By: iNeuron Intelligence
-    #                                         Version: 1.0
-    #                                         Revisions: None
-    #
-    #                                                 """
-    #
-    #     try:
-    #         path = 'Prediction_Raw_Files_Validated/'
-    #         if os.path.isdir(path + 'Bad_Raw/'):
-    #             shutil.rmtree(path + 'Bad_Raw/')
-    #             file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #             self.logger.log(file,"BadRaw directory deleted before starting validation!!!")
-    #             file.close()
-    #     except OSError as s:
-    #         file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #         self.logger.log(file,"Error while Deleting Directory : %s" %s)
-    #         file.close()
-    #         raise OSError
-    #
-    # def moveBadFilesToArchiveBad(self):
-    #
-    #
-    #     """
-    #                                         Method Name: moveBadFilesToArchiveBad
-    #                                         Description: This method deletes the directory made  to store the Bad Data
-    #                                                       after moving the data in an archive folder. We archive the bad
-    #                                                       files to send them back to the client for invalid data issue.
-    #                                         Output: None
-    #                                         On Failure: OSError
-    #
-    #                                          Written By: iNeuron Intelligence
-    #                                         Version: 1.0
-    #                                         Revisions: None
-    #
-    #                                                 """
-    #     now = datetime.now()
-    #     date = now.date()
-    #     time = now.strftime("%H%M%S")
-    #     try:
-    #         path= "PredictionArchivedBadData"
-    #         if not os.path.isdir(path):
-    #             os.makedirs(path)
-    #         source = 'Prediction_Raw_Files_Validated/Bad_Raw/'
-    #         dest = 'PredictionArchivedBadData/BadData_' + str(date)+"_"+str(time)
-    #         if not os.path.isdir(dest):
-    #             os.makedirs(dest)
-    #         files = os.listdir(source)
-    #         for f in files:
-    #             if f not in os.listdir(dest):
-    #                 shutil.move(source + f, dest)
-    #         file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #         self.logger.log(file,"Bad files moved to archive")
-    #         path = 'Prediction_Raw_Files_Validated/'
-    #         if os.path.isdir(path + 'Bad_Raw/'):
-    #             shutil.rmtree(path + 'Bad_Raw/')
-    #         self.logger.log(file,"Bad Raw Data Folder Deleted successfully!!")
-    #         file.close()
-    #     except OSError as e:
-    #         file = open("Prediction_Logs/GeneralLog.txt", 'a+')
-    #         self.logger.log(file, "Error while moving bad files to archive:: %s" % e)
-    #         file.close()
-    #         raise OSError
-    #
-
-
 
     def validationFileNameRaw(self,regex,LengthOfDateStampInFile,LengthOfTimeStampInFile):
         """
@@ -226,7 +139,7 @@ class Prediction_Data_validation:
             Output: None
             On Failure: Exception
 
-             Written By: iNeuron Intelligence
+             Written By: Shahriar Sourav
             Version: 1.0
             Revisions: None
 
@@ -239,7 +152,6 @@ class Prediction_Data_validation:
         files = [obj.key for obj in bucket.objects.filter(Prefix='predictiondata/') if obj.size]
 
         try:
-            f = open("Prediction_Logs/nameValidationLog.txt", 'a+')
             for filename in files:
                 filename = filename.split('/')[1]
                 if (re.match(regex, filename)):
@@ -253,6 +165,11 @@ class Prediction_Data_validation:
                             }
                             self.resource.meta.client.copy(copy_source, self.bucket,
                                                            'goodrawdataprediction/' + filename)
+                            message = "Valid File name!! File moved to GoodRaw Folder "
+                            data_db = {'objective': 'FileNameValidation', 'status': 'ok',
+                                       'error_type': '', 'file_name': filename,
+                                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                            self.db_obj.insert_data(data_db)
 
                         else:
                             copy_source = {
@@ -261,6 +178,11 @@ class Prediction_Data_validation:
                             }
                             self.resource.meta.client.copy(copy_source, self.bucket,
                                                            'badrawdataprediction/' + filename)
+                            message = "Invalid File name!! File moved to BadRaw Folder "
+                            data_db = {'objective': 'FileNameValidation', 'status': 'error',
+                                       'error_type': 'Lenght of Timestamp Mismatched', 'file_name': filename,
+                                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                            self.db_obj.insert_data(data_db)
 
                     else:
                         copy_source = {
@@ -269,6 +191,11 @@ class Prediction_Data_validation:
                         }
                         self.resource.meta.client.copy(copy_source, self.bucket,
                                                        'badrawdataprediction/' + filename)
+                        message = "Invalid File name!! File moved to BadRaw Folder "
+                        data_db = {'objective': 'FileNameValidation', 'status': 'error',
+                                   'error_type': 'Lenght of Date Sample Mismatched', 'file_name': filename,
+                                   'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                        self.db_obj.insert_data(data_db)
                 else:
                     copy_source = {
                         'Bucket': self.bucket,
@@ -276,9 +203,17 @@ class Prediction_Data_validation:
                     }
                     self.resource.meta.client.copy(copy_source, self.bucket,
                                                    'badrawdataprediction/' + filename)
-
-
+                    message = "Invalid File name!! File moved to BadRaw Folder "
+                    data_db = {'objective': 'FileNameValidation', 'status': 'error',
+                               'error_type': 'File Naming convention Mismatched', 'file_name': filename,
+                               'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                    self.db_obj.insert_data(data_db)
         except Exception as e:
+            message = str(e)
+            data_db = {'objective': 'FileNameValidation', 'status': 'error',
+                       'error_type': 'ExceptionError', 'file_name': '',
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise e
 
 
@@ -295,7 +230,7 @@ class Prediction_Data_validation:
                     Output: None
                     On Failure: Exception
 
-                     Written By: iNeuron Intelligence
+                     Written By: Shahriar Sourav
                     Version: 1.0
                     Revisions: None
 
@@ -320,19 +255,28 @@ class Prediction_Data_validation:
                                                    'badrawdataprediction/' + file.split('/')[1])
                     self.resource.Object(self.bucket,file).delete()
                     print("baddata column length")
+                    message = "Invalid Column Length for the file!! File moved to Bad Raw Folder"
+                    data_db = {'objective': 'ColumnLengthValidation', 'status': 'error',
+                               'error_type': 'Error occured while validating Column Length', 'file_name': file,
+                               'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                    self.db_obj.insert_data(data_db)
 
-        except OSError:
 
+        except OSError as ex:
+            message = str(ex)
+            data_db = {'objective': 'ColumnLengthValidation', 'status': 'error',
+                       'error_type': 'OSError', 'file_name': "",
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise OSError
+
         except Exception as e:
-
+            message = str(e)
+            data_db = {'objective': 'ColumnLengthValidation', 'status': 'error',
+                       'error_type': 'ExceptionError', 'file_name': '',
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise e
-
-
-    # def deletePredictionFile(self):
-    #
-    #     if os.path.exists('Prediction_Output_File/Predictions.csv'):
-    #         os.remove('Prediction_Output_File/Predictions.csv')
 
     def validateMissingValuesInWholeColumn(self):
         """
@@ -343,7 +287,7 @@ class Prediction_Data_validation:
                                   Output: None
                                   On Failure: Exception
 
-                                   Written By: iNeuron Intelligence
+                                   Written By: Shahriar Sourav
                                   Version: 1.0
                                   Revisions: None
 
@@ -370,18 +314,31 @@ class Prediction_Data_validation:
                                                        'badrawdataprediction/' + file.split('/')[1])
                         self.resource.Object(self.bucket,file).delete()
                         print("baddata missing values ")
-                        print(file)
+                        message = "Invalid Column Length for the file!! File moved to Bad Raw Folder"
+                        data_db = {'objective': 'validateMissingValuesInWholeColumn', 'status': 'error',
+                                   'error_type': 'Whole Column has Missing Value', 'file_name': file,
+                                   'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+                        self.db_obj.insert_data(data_db)
                         break
                 if count==0:
                     #csv.rename(columns={"Unnamed: 0": "Wafer"}, inplace=True)
                     csv_buffer = StringIO()
                     csv.to_csv(csv_buffer)
                     self.resource.Object(self.bucket, file).put(Body=csv_buffer.getvalue())
-        except OSError:
 
+        except OSError as ex:
+            message = str(ex)
+            data_db = {'objective': 'validateMissingValuesInWholeColumn', 'status': 'error',
+                       'error_type': 'OSError', 'file_name': "",
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise OSError
         except Exception as e:
-
+            message = str(e)
+            data_db = {'objective': 'validateMissingValuesInWholeColumn', 'status': 'error',
+                       'error_type': 'ExceptionError', 'file_name': '',
+                       'message': message, 'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise e
 
 

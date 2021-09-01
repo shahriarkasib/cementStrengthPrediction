@@ -7,14 +7,12 @@ from datetime import datetime as dt
 class KMeansClustering:
     """
             This class shall  be used to divide the data into clusters before training.
-
-            Written By: iNeuron Intelligence
+            Written By: Shahriar Sourav
             Version: 1.0
             Revisions: None
 
             """
     def __init__(self, db_obj, client, resource):
-
         self.client = client
         self.resource = resource
         self.db_obj = db_obj
@@ -26,7 +24,7 @@ class KMeansClustering:
                         Output: A picture saved to the directory
                         On Failure: Raise Exception
 
-                        Written By: iNeuron Intelligence
+                        Written By: Shahriar Sourav
                         Version: 1.0
                         Revisions: None
 
@@ -46,8 +44,6 @@ class KMeansClustering:
             plt.title('The Elbow Method')
             plt.xlabel('Number of clusters')
             plt.ylabel('WCSS')
-            #plt.show()
-            plt.savefig('preprocessing_data/K-Means_Elbow.PNG') # saving the elbow plot locally
             # finding the value of the optimum cluster programmatically
             self.kn = KneeLocator(range(1, 11), wcss, curve='convex', direction='decreasing')
 
@@ -72,7 +68,7 @@ class KMeansClustering:
                                 Output: A datframe with cluster column
                                 On Failure: Raise Exception
 
-                                Written By: iNeuron Intelligence
+                                Written By: Shahriar Sourav
                                 Version: 1.0
                                 Revisions: None
 
@@ -93,6 +89,15 @@ class KMeansClustering:
                                                                                     # passing 'Model' as the functions need three parameters
 
             self.data['Cluster']=self.y_kmeans  # create a new column in dataset for storing the cluster information
+            data_db = {'objective': 'CreateCluster', 'status': 'ok', 'error': '',
+                       'message': 'succesfully created ' + str(
+                           self.kn.knee) + 'clusters. Exited the create_clusters method of the KMeansClustering class',
+                       'time': 'very nice'}
+            self.db_obj.insert_data(data_db)
             return self.data
         except Exception as e:
+            data_db = {'objective': 'CreateCluster', 'status': 'error', 'error': 'ExceptionError',
+                       'message': str(e),
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise Exception()

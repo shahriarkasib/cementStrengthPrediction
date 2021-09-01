@@ -5,7 +5,6 @@ from sklearn.preprocessing import StandardScaler
 from datetime import datetime as dt
 
 
-
 class Preprocessor:
     """
         This class shall  be used to clean and transform the data before training.
@@ -85,20 +84,20 @@ class Preprocessor:
 
     def dropUnnecessaryColumns(self,data,columnNameList):
         """
-                        Method Name: is_null_present
+                        Method Name: dropUnnecessaryColumns
                         Description: This method drops the unwanted columns as discussed in EDA section.
 
-                        Written By: iNeuron Intelligence
+                        Written By: Shahriar Sourav
                         Version: 1.0
                         Revisions: None
 
                                 """
-        data_db = {'objective': 'separate_label_feature', 'status': 'ok', 'error': '',
+        data_db = {'objective': 'dropUnnecessaryColumns', 'status': 'ok', 'error': '',
                    'message': 'Dropping Unnecessary columns',
                    'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
         self.db_obj.insert_data(data_db)
         data = data.drop(columnNameList,axis=1)
-        data_db = {'objective': 'separate_label_feature', 'status': 'ok', 'error': '',
+        data_db = {'objective': 'dropUnnecessaryColumns', 'status': 'ok', 'error': '',
                    'message': 'Unnecessary columns Dropped',
                    'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
         self.db_obj.insert_data(data_db)
@@ -108,20 +107,30 @@ class Preprocessor:
     def replaceInvalidValuesWithNull(self,data):
 
         """
-                               Method Name: is_null_present
+                               Method Name: replaceInvalidValuesWithNull
                                Description: This method replaces invalid values i.e. '?' with null, as discussed in EDA.
 
-                               Written By: iNeuron Intelligence
+                               Written By: Shahriar Sourav
                                Version: 1.0
                                Revisions: None
 
                                        """
-
-        for column in data.columns:
-            count = data[column][data[column] == '?'].count()
-            if count != 0:
-                data[column] = data[column].replace('?', np.nan)
-        return data
+        data_db = {'objective': 'replaceInvalidValuesWithNull', 'status': 'ok', 'error': '',
+                   'message': 'Replacing invalid values with null',
+                   'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+        self.db_obj.insert_data(data_db)
+        try:
+            for column in data.columns:
+                count = data[column][data[column] == '?'].count()
+                if count != 0:
+                    data[column] = data[column].replace('?', np.nan)
+            return data
+        except Exception as e:
+            data_db = {'objective': 'replaceInvalidValuesWithNull', 'status': 'ok', 'error': '',
+                       'message': str(e),
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
+            raise e
 
     def is_null_present(self, data):
         """
@@ -152,8 +161,6 @@ class Preprocessor:
                 dataframe_with_null = pd.DataFrame()
                 dataframe_with_null['columns'] = data.columns
                 dataframe_with_null['missing values count'] = np.asarray(data.isna().sum())
-                dataframe_with_null.to_csv(
-                    'preprocessing_data/null_values.csv')  # storing the null column information to file
             data_db = {'objective': 'is_null_present', 'status': 'ok', 'error': '',
                        'message': 'Finding missing values is a success.Data written to the null values file. Exited the is_null_present method of the Preprocessor class',
                        'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
@@ -167,61 +174,6 @@ class Preprocessor:
             self.db_obj.insert_data(data_db)
 
             raise Exception()
-
-    def encodeCategoricalValues(self,data):
-     """
-                                        Method Name: encodeCategoricalValues
-                                        Description: This method encodes all the categorical values in the training set.
-                                        Output: A Dataframe which has all the categorical values encoded.
-                                        On Failure: Raise Exception
-
-                                        Written By: iNeuron Intelligence
-                                        Version: 1.0
-                                        Revisions: None
-                     """
-     data["class"] = data["class"].map({'p': 1, 'e': 2})
-
-     for column in data.drop(['class'],axis=1).columns:
-            data = pd.get_dummies(data, columns=[column])
-
-     return data
-
-
-    def encodeCategoricalValuesPrediction(self,data):
-        """
-                                               Method Name: encodeCategoricalValuesPrediction
-                                               Description: This method encodes all the categorical values in the prediction set.
-                                               Output: A Dataframe which has all the categorical values encoded.
-                                               On Failure: Raise Exception
-
-                                               Written By: iNeuron Intelligence
-                                               Version: 1.0
-                                               Revisions: None
-                            """
-
-        for column in data.columns:
-            data = pd.get_dummies(data, columns=[column])
-
-        return data
-
-    # def handleImbalanceDataset(self,X,Y):
-    #     """
-    #                                                   Method Name: handleImbalanceDataset
-    #                                                   Description: This method handles the imbalance in the dataset by oversampling.
-    #                                                   Output: A Dataframe which is balanced now.
-    #                                                   On Failure: Raise Exception
-    #
-    #                                                   Written By: iNeuron Intelligence
-    #                                                   Version: 1.0
-    #                                                   Revisions: None
-    #                                """
-    #
-    #
-    #
-    #     rdsmple = RandomOverSampler()
-    #     x_sampled, y_sampled = rdsmple.fit_sample(X, Y)
-    #
-    #     return x_sampled,y_sampled
 
     def standardScalingData(self,X):
         data_db = {'objective': 'is_null_present', 'status': 'ok', 'error': '',
@@ -300,11 +252,15 @@ class Preprocessor:
                                                 Output: List of the columns with standard deviation of zero
                                                 On Failure: Raise Exception
 
-                                                Written By: iNeuron Intelligence
+                                                Written By: Shahriar Sourav
                                                 Version: 1.0
                                                 Revisions: None
                              """
-        self.logger_object.log(self.file_object, 'Entered the get_columns_with_zero_std_deviation method of the Preprocessor class')
+        data_db = {'objective': 'get_columns_with_zero_std_deviation', 'status': 'ok', 'error': '',
+                   'message': 'Entered the get_columns_with_zero_std_deviation method of the Preprocessor class',
+                   'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+        self.db_obj.insert_data(data_db)
+
         self.columns=data.columns
         self.data_n = data.describe()
         self.col_to_drop=[]
@@ -312,10 +268,15 @@ class Preprocessor:
             for x in self.columns:
                 if (self.data_n[x]['std'] == 0): # check if standard deviation is zero
                     self.col_to_drop.append(x)  # prepare the list of columns with standard deviation zero
-            self.logger_object.log(self.file_object, 'Column search for Standard Deviation of Zero Successful. Exited the get_columns_with_zero_std_deviation method of the Preprocessor class')
+            data_db = {'objective': 'get_columns_with_zero_std_deviation', 'status': 'ok', 'error': '',
+                       'message': 'Column search for Standard Deviation of Zero Successful. Exited the get_columns_with_zero_std_deviation method of the Preprocessor class',
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             return self.col_to_drop
 
         except Exception as e:
-            self.logger_object.log(self.file_object,'Exception occured in get_columns_with_zero_std_deviation method of the Preprocessor class. Exception message:  ' + str(e))
-            self.logger_object.log(self.file_object, 'Column search for Standard Deviation of Zero Failed. Exited the get_columns_with_zero_std_deviation method of the Preprocessor class')
-            raise Exception()
+            data_db = {'objective': 'get_columns_with_zero_std_deviation', 'status': 'error', 'error': 'ExceptionError',
+                       'message': str(e),
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
+            raise e

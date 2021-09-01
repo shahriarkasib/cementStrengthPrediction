@@ -26,8 +26,6 @@ class prediction:
     def predictionFromModel(self):
 
         try:
-            #self.pred_data_val.deletePredictionFile() #deletes the existing prediction file from last run!
-
             data_db = {'objective': 'prediction', 'status': 'ok', 'error': '', 'message': "Start of Training",
                        'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
             self.db_obj.insert_data(data_db)
@@ -46,9 +44,6 @@ class prediction:
                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
             self.db_obj.insert_data(data_db)
 
-            #code change
-            # wafer_names=data['Wafer']
-            # data=data.drop(labels=['Wafer'],axis=1)
             print("prediction preprocessing has started")
             data_db = {'objective': 'prediction', 'status': 'ok', 'error': '',
                        'message': "Start Prepearing Data for Prediction",
@@ -99,6 +94,14 @@ class prediction:
             print("predicted")
             out = json.loads(result.to_json(orient='records'))
             self.db_obj_table.table.insert_many(out)
+            data_db = {'objective': 'prediction', 'status': 'ok', 'error': '', 'message': "End of Prediction",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
+
         except Exception as ex:
+            data_db = {'objective': 'prediction', 'status': 'error', 'error': 'ExceptionError', 'message': str(ex),
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise ex
+        return result.head().to_json(orient="records")
 

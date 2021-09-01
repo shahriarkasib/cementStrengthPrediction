@@ -1,16 +1,10 @@
-import sqlite3
 from datetime import datetime
-from os import listdir
 import os
 import re
 import json
 import shutil
 import pandas as pd
 from io import StringIO
-from application_logging.logger import App_Logger
-
-
-
 
 
 class Raw_Data_validation:
@@ -28,9 +22,6 @@ class Raw_Data_validation:
         self.client = client
         self.resource = resource
         self.bucket = bucket
-        self.Batch_Directory = 'Training_Batch_Files/'
-        self.schema_path = 'schema_training.json'
-        self.logger = App_Logger()
 
 
     def valuesFromSchema(self):
@@ -58,30 +49,19 @@ class Raw_Data_validation:
             column_names = dic['ColName']
             NumberofColumns = dic['NumberofColumns']
 
-            file = open("Training_Logs/valuesfromSchemaValidationLog.txt", 'a+')
             message ="LengthOfDateStampInFile:: %s" %LengthOfDateStampInFile + "\t" + "LengthOfTimeStampInFile:: %s" % LengthOfTimeStampInFile +"\t " + "NumberofColumns:: %s" % NumberofColumns + "\n"
-            self.logger.log(file,message)
-
-            file.close()
-
 
 
         except ValueError:
-            file = open("Training_Logs/valuesfromSchemaValidationLog.txt", 'a+')
-            self.logger.log(file,"ValueError:Value not found inside schema_training.json")
-            file.close()
+
             raise ValueError
 
         except KeyError:
-            file = open("Training_Logs/valuesfromSchemaValidationLog.txt", 'a+')
-            self.logger.log(file, "KeyError:Key value error incorrect key passed")
-            file.close()
+
             raise KeyError
 
         except Exception as e:
-            file = open("Training_Logs/valuesfromSchemaValidationLog.txt", 'a+')
-            self.logger.log(file, str(e))
-            file.close()
+
             raise e
 
         return LengthOfDateStampInFile, LengthOfTimeStampInFile, column_names, NumberofColumns
@@ -95,7 +75,7 @@ class Raw_Data_validation:
                                 Output: Regex pattern
                                 On Failure: None
 
-                                 Written By: iNeuron Intelligence
+                                 Written By: Shahriar Sourav
                                 Version: 1.0
                                 Revisions: None
 
@@ -113,7 +93,7 @@ class Raw_Data_validation:
                                       Output: None
                                       On Failure: OSError
 
-                                       Written By: iNeuron Intelligence
+                                       Written By: Shahriar Sourav
                                       Version: 1.0
                                       Revisions: None
 
@@ -127,9 +107,7 @@ class Raw_Data_validation:
             aws_object.put()
 
         except OSError as ex:
-            file = open("Training_Logs/GeneralLog.txt", 'a+')
-            self.logger.log(file,"Error while creating Directory %s:" % ex)
-            file.close()
+
             raise OSError
 
     def deleteExistingGoodDataTrainingFolder(self):
@@ -142,7 +120,7 @@ class Raw_Data_validation:
                                             Output: None
                                             On Failure: OSError
 
-                                             Written By: iNeuron Intelligence
+                                             Written By: Shahriar Sourav
                                             Version: 1.0
                                             Revisions: None
 
@@ -156,9 +134,7 @@ class Raw_Data_validation:
                 self.resource.Object(self.bucket, file).delete()
 
         except OSError as s:
-            file = open("Training_Logs/GeneralLog.txt", 'a+')
-            self.logger.log(file,"Error while Deleting Directory : %s" %s)
-            file.close()
+
             raise OSError
 
     def deleteExistingBadDataTrainingFolder(self):
@@ -169,7 +145,7 @@ class Raw_Data_validation:
                                             Output: None
                                             On Failure: OSError
 
-                                             Written By: iNeuron Intelligence
+                                             Written By: Shahriar Sourav
                                             Version: 1.0
                                             Revisions: None
 
@@ -182,9 +158,7 @@ class Raw_Data_validation:
             for file in files:
                 self.resource.Object(self.bucket, file).delete()
         except OSError as s:
-            file = open("Training_Logs/GeneralLog.txt", 'a+')
-            self.logger.log(file,"Error while Deleting Directory : %s" %s)
-            file.close()
+
             raise OSError
 
     def moveBadFilesToArchiveBad(self):
@@ -197,7 +171,7 @@ class Raw_Data_validation:
                                             Output: None
                                             On Failure: OSError
 
-                                             Written By: iNeuron Intelligence
+                                             Written By: Shahriar Sourav
                                             Version: 1.0
                                             Revisions: None
 
@@ -219,17 +193,11 @@ class Raw_Data_validation:
                 for f in files:
                     if f not in os.listdir(dest):
                         shutil.move(source + f, dest)
-                file = open("Training_Logs/GeneralLog.txt", 'a+')
-                self.logger.log(file,"Bad files moved to archive")
-                path = 'Training_Raw_files_validated/'
-                if os.path.isdir(path + 'Bad_Raw/'):
-                    shutil.rmtree(path + 'Bad_Raw/')
-                self.logger.log(file,"Bad Raw Data Folder Deleted successfully!!")
-                file.close()
+
+
+
         except Exception as e:
-            file = open("Training_Logs/GeneralLog.txt", 'a+')
-            self.logger.log(file, "Error while moving bad files to archive:: %s" % e)
-            file.close()
+
             raise e
 
 
@@ -244,7 +212,7 @@ class Raw_Data_validation:
                     Output: None
                     On Failure: Exception
 
-                     Written By: iNeuron Intelligence
+                     Written By: Shahriar Sourav
                     Version: 1.0
                     Revisions: None
 
@@ -259,7 +227,6 @@ class Raw_Data_validation:
         bucket = self.resource.Bucket('cementstrengthproject')
         files = [obj.key for obj in bucket.objects.filter(Prefix='inputdata/') if obj.size]
         try:
-            f = open("Training_Logs/nameValidationLog.txt", 'a+')
             for filename in files:
                 filename = filename.split('/')[1]
                 if (re.match(regex, filename)):
@@ -275,7 +242,6 @@ class Raw_Data_validation:
                             }
                             self.resource.meta.client.copy(copy_source, self.bucket,
                                                               'goodrawdata/' + filename)
-                            self.logger.log(f,"Valid File name!! File moved to GoodRaw Folder :: %s" % filename)
 
                         else:
                             copy_source = {
@@ -284,7 +250,6 @@ class Raw_Data_validation:
                             }
                             self.resource.meta.client.copy(copy_source, self.bucket,
                                                               'badrawdata/' + filename)
-                            self.logger.log(f,"Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
 
                     else:
                         copy_source = {
@@ -293,7 +258,6 @@ class Raw_Data_validation:
                         }
                         self.resource.meta.client.copy(copy_source, self.bucket,
                                                           'badrawdata/' + filename)
-                        self.logger.log(f,"Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
                 else:
                     copy_source = {
                         'Bucket': 'cementstrengthproject',
@@ -301,14 +265,10 @@ class Raw_Data_validation:
                     }
                     self.resource.meta.client.copy(copy_source, self.bucket,
                                                       'badrawdata/' + filename)
-                    self.logger.log(f, "Invalid File Name!! File moved to Bad Raw Folder :: %s" % filename)
             print("filename validated")
-            f.close()
 
         except Exception as e:
-            f = open("Training_Logs/nameValidationLog.txt", 'a+')
-            self.logger.log(f, "Error occured while validating FileName %s" % e)
-            f.close()
+
             raise e
 
 
@@ -325,14 +285,13 @@ class Raw_Data_validation:
                           Output: None
                           On Failure: Exception
 
-                           Written By: iNeuron Intelligence
+                           Written By: Shahriar Sourav
                           Version: 1.0
                           Revisions: None
 
                       """
         try:
-            f = open("Training_Logs/columnValidationLog.txt", 'a+')
-            self.logger.log(f,"Column Length Validation Started!!")
+
             bucket = self.resource.Bucket(self.bucket)
             files = [obj.key for obj in bucket.objects.filter(Prefix='goodrawdata/') if obj.size]
 
@@ -351,20 +310,13 @@ class Raw_Data_validation:
                     self.resource.meta.client.copy(copy_source, self.bucket,
                                                    'badrawdata/' + file.split('/')[1])
                     self.resource.Object(self.bucket,file).delete()
-                    self.logger.log(f, "Invalid Column Length for the file!! File moved to Bad Raw Folder :: %s" % file)
-            self.logger.log(f, "Column Length Validation Completed!!")
             print("column length validated")
         except OSError:
-            f = open("Training_Logs/columnValidationLog.txt", 'a+')
-            self.logger.log(f, "Error Occured while moving the file :: %s" % OSError)
-            f.close()
+
             raise OSError
         except Exception as e:
-            f = open("Training_Logs/columnValidationLog.txt", 'a+')
-            self.logger.log(f, "Error Occured:: %s" % e)
-            f.close()
+
             raise e
-        f.close()
 
     def validateMissingValuesInWholeColumn(self):
         """
@@ -375,15 +327,12 @@ class Raw_Data_validation:
                                   Output: None
                                   On Failure: Exception
 
-                                   Written By: iNeuron Intelligence
+                                   Written By: Shahriar Sourav
                                   Version: 1.0
                                   Revisions: None
 
                               """
         try:
-            f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
-            self.logger.log(f,"Missing Values Validation Started!!")
-
             bucket = self.resource.Bucket(self.bucket)
             files = [obj.key for obj in bucket.objects.filter(Prefix='goodrawdata/') if obj.size]
 
@@ -405,7 +354,6 @@ class Raw_Data_validation:
                         self.resource.meta.client.copy(copy_source, self.bucket,
                                                        'badrawdata/' + file.split('/')[1])
                         self.resource.Object(self.bucket, file).delete()
-                        self.logger.log(f,"Invalid Column Length for the file!! File moved to Bad Raw Folder :: %s" % file)
                         break
                 if count==0:
                     print(csv.head())
@@ -427,15 +375,3 @@ class Raw_Data_validation:
         # f.close()
         except:
             pass
-
-
-
-
-
-
-
-
-
-
-
-

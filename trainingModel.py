@@ -15,7 +15,6 @@ from data_preprocessing import preprocessing
 from data_preprocessing import clustering
 from best_model_finder import tuner
 from file_operations import file_methods
-from application_logging import logger
 from log_insertion_to_db.log_insertion_to_db import log_insertion_to_db
 from datetime import datetime as dt
 #Creating the common Logging object
@@ -28,11 +27,8 @@ class trainModel:
         self.resource = resource
         self.bucket = bucket
         self.db_obj = log_insertion_to_db('TrainModel')
-        self.log_writer = logger.App_Logger()
-        self.file_object = open("Training_Logs/ModelTrainingLog.txt", 'a+')
     def trainingModel(self):
         # Logging the start of Training
-        self.log_writer.log(self.file_object, 'Start of Training')
         data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Start of Training",
                    'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
         self.db_obj.insert_data(data_db)
@@ -87,13 +83,27 @@ class trainModel:
             X = preprocessor.logTransformation(X)
             """ Applying the clustering approach"""
             print("start clustering")
-            kmeans=clustering.KMeansClustering(self.db_obj, self.client, self.resource) # object initialization.
-            number_of_clusters=kmeans.elbow_plot(X)  #  using the elbow plot to find the number of optimum clusters
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Data Prepeared For Training",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
 
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Creating Cluster For Training",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
+            kmeans=clustering.KMeansClustering(self.db_obj, self.client, self.resource) # object initialization.
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Cluster created For Training",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
+            number_of_clusters=kmeans.elbow_plot(X)  #  using the elbow plot to find the number of optimum clusters
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Elbow Plot Done",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             # Divide the data into clusters
             print("start creating cluster")
             X=kmeans.create_clusters(X,number_of_clusters)
-
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '', 'message': "Cluster Created",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             #create a new column in the dataset consisting of the corresponding cluster assignments.
             X['Labels']=Y
 
@@ -116,7 +126,7 @@ class trainModel:
                 x_train_scaled = preprocessor.standardScalingData(x_train)
                 x_test_scaled = preprocessor.standardScalingData(x_test)
                 print("start finding model")
-                model_finder=tuner.Model_Finder(self.file_object,self.log_writer) # object initialization
+                model_finder=tuner.Model_Finder(self.db_obj) # object initialization
 
                 #getting the best model for each of the clusters
                 print("getting the best model")
@@ -127,11 +137,14 @@ class trainModel:
                 save_model=file_op.save_model(best_model,best_model_name+str(i))
 
             # logging the successful Training
-            self.log_writer.log(self.file_object, 'Successful End of Training')
-            self.file_object.close()
+            data_db = {'objective': 'training', 'status': 'ok', 'error': '',
+                       'message': "Successful End of Training",
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
 
-        except Exception:
+        except Exception as e:
             # logging the unsuccessful Training
-            self.log_writer.log(self.file_object, 'Unsuccessful End of Training')
-            self.file_object.close()
+            data_db = {'objective': 'training', 'status': 'error', 'error': 'ExceptionError', 'message': str(e),
+                       'time': dt.now().strftime("%d/%m/%Y %H:%M:%S")}
+            self.db_obj.insert_data(data_db)
             raise Exception
